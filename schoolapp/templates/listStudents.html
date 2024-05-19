@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<title>My App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+    .non-paye {
+        background-color: rgba(210, 175, 175, 0.75);
+    }
+</style>
+<body>
+<div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px;left:0;" id="mySidebar">
+    <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+    <a href="{% url 'sidebar' %}" style="color: #354649;text-align: center;font-weight: bold"
+       class="w3-bar-item w3-button">Acceuil</a>
+    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Adhérentes</span>
+    <a href="{% url 'registration' %}" class="w3-bar-item w3-button">Ajouter</a>
+    <a href="{% url 'list' %}" class="w3-bar-item w3-button">Liste</a>
+    <a href="{% url 'recherche' %}" class="w3-bar-item w3-button">Rechercher</a>
+    <a href="{% url 'modif' %}" class="w3-bar-item w3-button">Modifier</a>
+    <a href="{% url 'suppStudent' %}" class="w3-bar-item w3-button">Supprimer</a>
+    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Professeurs</span>
+    <a href="{% url 'addProf' %}" class="w3-bar-item w3-button">Ajouter</a>
+    <a href="{% url 'listProf' %}" class="w3-bar-item w3-button">Liste</a>
+    <a href="{% url 'rechercheProf' %}" class="w3-bar-item w3-button">Rechercher</a>
+    <a href="{% url 'modifProf' %}" class="w3-bar-item w3-button">Modifier</a>
+    <a href="{% url 'suppProf' %}" class="w3-bar-item w3-button">Supprimer</a>
+</div>
+<div class="w3-main" style="margin-left:200px">
+    <div class="w3-teal">
+        <button class="w3-button  w3-xlarge w3-left w3-hide-large" style="background-color: #A3C6C4"
+                onclick="w3_open()">&#9776;
+        </button>
+        <div class="w3-container" style="background-color: #354649">
+            <h1 style="color: white">ⵀⵉⵢⴰ ⵡⴰ ⵀⵓⵡⴰ ⵙⵉⵢⴰⵏ</h1>
+        </div>
+    </div>
+    <div class="w3-container">
+        <h2 style="font-size: 35px; padding: 10px">Liste des adhérentes</h2>
+        <div style="float: right;">
+            <label for="tri">Trier par :</label>
+            <select id="tri" name="tri">
+                <option value="nom">Nom</option>
+                <option value="date">Date d'adhésion</option>
+            </select>
+            <button onclick="triEtudiants()">Trier</button>
+        </div>
+    <div>
+        <p>Veuillez choisir le mois:</p>
+        <select id="mois" name="mois">
+            <option value="" disabled selected id="currentMonth">--Sélectionnez le mois--</option>
+            <option value="1">Janvier</option>
+            <option value="2">Février</option>
+            <option value="3">Mars</option>
+            <option value="4">Avril</option>
+            <option value="5">Mai</option>
+            <option value="6">Juin</option>
+            <option value="7">Juillet</option>
+            <option value="8">Août</option>
+            <option value="9">Septembre</option>
+            <option value="10">Octobre</option>
+            <option value="11">Novembre</option>
+            <option value="12">Décembre</option>
+        </select>
+        <label for="niveau">Choisir le niveau :</label>
+        <select id="niveau" name="niveau">
+            <option value="" disabled selected>--Sélectionnez le niveau--</option>
+            <option value="CP">CP</option>
+            <option value="CE1">CE1</option>
+            <option value="CE2">CE2</option>
+            <option value="CM1">CM1</option>
+            <option value="CM2">CM2</option>
+            <option value="6ème">6ème</option>
+            <option value="1 AC">1 AC</option>
+            <option value="2 AC">2 AC</option>
+            <option value="3 AC">3 AC</option>
+            <option value="Tronc Commun">Tronc Commun</option>
+            <option value="Première année BAC">Première année BAC</option>
+            <option value="Deuxième année BAC">Deuxième année BAC</option>
+        </select>
+    </div><br><br>
+        <table class="w3-table w3-bordered">
+            <tr>
+                <th>Nom Complet</th>
+                <th>Numéro de téléphone</th>
+                <th>Date d'adhésion</th>
+                <th>Niveau</th>
+                <th>Nombre de séances</th>
+                <th>Reste à payer</th>
+            </tr>
+            {% for student in students reversed %}
+                {% if student.nonpaye > 0 %}
+                    <tr class="non-paye">
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.numTel }}</td>
+                        <td>{{ student.date }}</td>
+                        <td>{{ student.niveau_text }}</td>
+                        <td>{{ student.seance }}</td>
+                        <td>{{ student.nonpaye }}</td>
+
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.numTel }}</td>
+                        <td>{{ student.date }}</td>
+                        <td>{{ student.niveau_text }}</td>
+                        <td>{{ student.seance }}</td>
+                        <td>{{ student.nonpaye }}</td>
+
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+</div>
+<!--<script>
+    // Obtenir le mois actuel
+    const currentMonth = new Date().getMonth() + 1; // JavaScript compte les mois à partir de 0
+
+    // Sélectionner l'option placeholder et la mettre à jour avec le mois actuel
+    const placeholderOption = document.getElementById('currentMonth');
+    if (placeholderOption) {
+        placeholderOption.textContent = getMonthName(currentMonth);
+        placeholderOption.value = currentMonth;
+    }
+
+    // Fonction pour obtenir le nom complet du mois en fonction de son numéro
+    function getMonthName(monthNumber) {
+        const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+        return months[monthNumber - 1]; // Soustraire 1 car JavaScript compte les mois à partir de 0
+    }
+</script>-->
+<script>
+    function w3_open() {
+        document.getElementById("mySidebar").style.display = "block";
+    }
+
+    function w3_close() {
+        document.getElementById("mySidebar").style.display = "none";
+    }
+</script>
+
+<script>
+    // Obtenir les éléments HTML pertinents
+    const selectMonth = document.getElementById('mois');
+    const tableRows = document.querySelectorAll('table.w3-table tr');
+
+    // Ajouter un gestionnaire d'événement de changement au sélecteur de mois
+    selectMonth.addEventListener('change', function () {
+        // Récupérer le mois sélectionné par l'utilisateur
+        const selectedMonth = parseInt(this.value); // Convertir en entier
+
+        // Parcourir toutes les lignes du tableau
+        tableRows.forEach(function (row) {
+            // Récupérer la date d'adhésion de chaque adhérente
+            const dateCell = row.querySelector('td:nth-child(3)');
+            if (dateCell) {
+                const date = new Date(dateCell.textContent);
+                const month = date.getMonth() + 1; // JavaScript compte les mois à partir de 0, donc ajouter 1
+                // Vérifier si la date d'adhésion correspond au mois sélectionné
+                if (selectedMonth === month) {
+                    row.style.display = ''; // Afficher la ligne si le mois correspond
+                } else {
+                    row.style.display = 'none'; // Masquer la ligne sinon
+                }
+            }
+        });
+    });
+</script>
+<script>
+    function triEtudiants() {
+        var critere = document.getElementById('tri').value;
+        var table = document.querySelector('.w3-table');
+        var rows = table.querySelectorAll('tr');
+        var tri = Array.from(rows).slice(1); // Exclure la première ligne d'en-tête
+
+        tri.sort(function(a, b) {
+            var aData = a.querySelector('td:nth-child(' + (critere === 'date' ? '3' : '1') + ')').innerText;
+            var bData = b.querySelector('td:nth-child(' + (critere === 'date' ? '3' : '1') + ')').innerText;
+
+            // Si le critère est le nom, utilisez localeCompare pour trier par ordre alphabétique
+            if (critere === 'nom') {
+                return aData.localeCompare(bData);
+            }
+
+            // Si le critère est la date, comparez les dates
+            if (critere === 'date') {
+                aData = new Date(aData);
+                bData = new Date(bData);
+            }
+
+            if (aData < bData) return -1;
+            if (aData > bData) return 1;
+            return 0;
+        });
+
+        for (var i = 0; i < tri.length; i++) {
+            table.appendChild(tri[i]);
+        }
+    }
+</script>
+<script>
+    // Utiliser la même variable tableRows définie dans le premier script
+    const selectNiveau = document.getElementById('niveau');
+
+    // Ajouter un gestionnaire d'événement de changement au sélecteur de niveau
+    selectNiveau.addEventListener('change', function () {
+        // Récupérer le niveau sélectionné par l'utilisateur
+        const selectedNiveau = this.value;
+        console.log("Niveau sélectionné :", selectedNiveau); // Afficher le niveau sélectionné dans la console
+
+        // Parcourir toutes les lignes du tableau
+        tableRows.forEach(function (row) {
+            // Récupérer le niveau de chaque adhérente
+            const niveauCell = row.querySelector('td:nth-child(4)');
+            if (niveauCell) {
+                const niveau = niveauCell.textContent.trim();
+                // Vérifier si le niveau correspond au niveau sélectionné
+                if (selectedNiveau === niveau || selectedNiveau === "") {
+                    row.style.display = ''; // Afficher la ligne si le niveau correspond ou si aucun niveau n'est sélectionné
+                } else {
+                    row.style.display = 'none'; // Masquer la ligne sinon
+                }
+            }
+        });
+    });
+</script>
+
+
+</body>
+</html>

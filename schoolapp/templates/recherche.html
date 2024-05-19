@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Add padding to containers */
+        .container {
+            padding: 16px;
+            background-color: white;
+        }
+
+        /* Full-width input fields */
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        input[type=text]:focus, input[type=password]:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+
+        /* Overwrite default styles of hr */
+        hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 25px;
+        }
+
+        /* Set a style for the submit button */
+        .registerbtn {
+            background-color: #A3C6C4;
+            color: white;
+            padding: 16px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            opacity: 0.9;
+        }
+
+        .registerbtn:hover {
+            opacity: 1;
+        }
+
+        /* Add a blue text color to links */
+        a {
+            color: dodgerblue;
+        }
+
+    </style>
+</head>
+<body>
+<div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px;left:0;" id="mySidebar">
+    <a href="{% url 'sidebar' %}" style="color: #354649;text-align: center;font-weight: bold"
+       class="w3-bar-item w3-button">Acceuil</a>
+    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Adhérentes</span>
+    <a href="{% url 'registration' %}" class="w3-bar-item w3-button">Ajouter</a>
+    <a href="{% url 'list' %}" class="w3-bar-item w3-button">Liste</a>
+    <a href="{% url 'recherche' %}" class="w3-bar-item w3-button">Rechercher</a>
+    <a href="{% url 'modif' %}" class="w3-bar-item w3-button">Modifier</a>
+    <a href="{% url 'suppStudent' %}" class="w3-bar-item w3-button">Supprimer</a>
+    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Professeurs</span>
+    <a href="{% url 'addProf' %}" class="w3-bar-item w3-button">Ajouter</a>
+    <a href="{% url 'listProf' %}" class="w3-bar-item w3-button">Liste</a>
+    <a href="{% url 'rechercheProf' %}" class="w3-bar-item w3-button">Rechercher</a>
+    <a href="{% url 'modifProf' %}" class="w3-bar-item w3-button">Modifier</a>
+    <a href="{% url 'suppProf' %}" class="w3-bar-item w3-button">Supprimer</a>
+</div>
+<div class="w3-main" style="margin-left:200px">
+    <div class="w3-teal">
+        <button class="w3-button  w3-xlarge w3-left w3-hide-large" style="background-color: #A3C6C4"
+                onclick="w3_open()">&#9776;
+        </button>
+        <div class="w3-container" style="background-color: #354649">
+            <h1 style="color: white">ⵀⵉⵢⴰ ⵡⴰ ⵀⵓⵡⴰ ⵙⵉⵢⴰⵏ</h1>
+        </div>
+    </div>
+    <form method="POST" action="{% url 'recherche' %}">
+        {% csrf_token %}
+        <div class="container">
+            <h2>Saisir le nom de l'adhérente que vous recherchez:</h2>
+
+            <div style="display: flex; align-items: center;">
+                <label for="nameRech"><b></b></label>
+                <input type="text" placeholder="Entrez le nom complet" name="nameRech" id="nameRech" required
+                       style="flex: 1;">
+                <button class="w3-bar-item w3-button w3-mobile" type="submit">
+                    <i class="material-icons" style="margin-left: 5px;">search</i>
+                </button>
+            </div>
+
+        </div>
+
+    </form>
+    {% if students %}
+        <div class="w3-container">
+        <h1>Résultat de la recherche "{{ nom_recherche }}": </h1>
+            <ul class="w3-ul w3-border">
+                {% for student in students %}
+                    <h2 style="margin-left: 10px">Fiche de l'adhérente <span style="background-color: #A3C6C4">{{ student.name }}</span> :</h2>
+                    <hr>
+                    <li>Nom Complet: {{ student.name }}</li>
+                    <li>Numéro de téléphone: {{ student.numTel }}</li>
+                    <li>Date d'adhésion: {{ student.date }}</li>
+                    <li>Niveau: {{ student.niveau_text }}</li>
+                    <li>Nombre de séances: {{ student.seance }}</li>
+                    <li>Montant total: {{ student.montant }}</li>
+                    <li>Montant payé: {{ student.paye }}</li>
+                    <li>Reste à payer: {{ student.nonpaye }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    {% if erreur %}
+        <div class="w3-container">
+            <p>{{ erreur }}</p>
+        </div>
+    {% endif %}
+</div>
+<br><br>
+<script>
+function w3_open() {
+  document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+  document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+
+</body>
+</html>

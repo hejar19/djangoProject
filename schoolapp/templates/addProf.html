@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Add padding to containers */
+        .container {
+            padding: 16px;
+            background-color: white;
+        }
+
+        /* Full-width input fields */
+        input[type=text], select {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        input[type=text]:focus, select:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+
+        /* Overwrite default styles of hr */
+        hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 25px;
+        }
+
+        /* Set a style for the submit button */
+        .registerbtn {
+            background-color: #A3C6C4;
+            color: white;
+            padding: 16px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            opacity: 0.9;
+        }
+
+        .registerbtn:hover {
+            opacity: 1;
+        }
+
+        /* Add a blue text color to links */
+        a {
+            color: dodgerblue;
+        }
+
+    </style>
+</head>
+<body>
+<div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px;left:0;" id="mySidebar">
+    <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+    <a href="{% url 'sidebar' %}" style="color: #354649;text-align: center;font-weight: bold"
+       class="w3-bar-item w3-button">Acceuil</a>
+    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Adhérentes</span>
+    <a href="{% url 'registration' %}" class="w3-bar-item w3-button">Ajouter</a>
+    <a href="{% url 'list' %}" class="w3-bar-item w3-button">Liste</a>
+    <a href="{% url 'recherche' %}" class="w3-bar-item w3-button">Rechercher</a>
+    <a href="{% url 'modif' %}" class="w3-bar-item w3-button">Modifier</a>
+    <a href="{% url 'suppStudent' %}" class="w3-bar-item w3-button">Supprimer</a>
+    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Professeurs</span>
+    <a href="{% url 'addProf' %}" class="w3-bar-item w3-button">Ajouter</a>
+    <a href="{% url 'listProf' %}" class="w3-bar-item w3-button">Liste</a>
+    <a href="{% url 'rechercheProf' %}" class="w3-bar-item w3-button">Rechercher</a>
+    <a href="{% url 'modifProf' %}" class="w3-bar-item w3-button">Modifier</a>
+    <a href="{% url 'suppProf' %}" class="w3-bar-item w3-button">Supprimer</a>
+</div>
+<div class="w3-main" style="margin-left:200px">
+    <div class="w3-teal">
+        <button class="w3-button  w3-xlarge w3-left w3-hide-large" style="background-color: #A3C6C4"
+                onclick="w3_open()">&#9776;
+        </button>
+        <div class="w3-container" style="background-color: #354649">
+            <h1 style="color: white">ⵀⵉⵢⴰ ⵡⴰ ⵀⵓⵡⴰ ⵙⵉⵢⴰⵏ</h1>
+        </div>
+    </div>
+    <form method="post" action="{% url 'addProf' %}">
+        {% csrf_token %}
+        <div class="container">
+            <h1>Ajouter Professeur</h1>
+            <p>Veuillez fournir toutes les informations suivantes.</p>
+            <hr>
+
+            <form method="POST" action="{% url 'addProf' %}">
+                {% csrf_token %}
+                <label for="nom"><b>Nom Complet:</b></label>
+                <input type="text" placeholder="Entrez le nom complet" name="nom" id="nom" required>
+
+                <label for="numTel"><b>Numéro de téléphone:</b></label><br>
+                <input type="text" id="numTel" name="numTel" pattern="[0-9]{10}" placeholder="0X XX XX XX XX"
+                       required><br><br>
+
+                <label for="matiere"><b>Matière:</b></label><br>
+                <select name="matiere" id="matiere" style="width: 100%;">
+                    <option value="" disabled selected>Choisissez une matière</option>
+                    <option value="mathematiques">Mathématiques</option>
+                    <option value="francais">Français</option>
+                    <option value="arabe">Arabe</option>
+                    <option value="anglais">Anglais</option>
+                    <option value="histoire_geo">Histoire Géographie</option>
+                    <option value="sciences">Sciences</option>
+                    <option value="ei">Education Islamique</option>
+                    <option value="philo">Philosohpie</option>
+                </select><br><br>
+
+                <label for="nombre_heures"><b>Nombre d'heures:</b></label><br>
+                <input type="number" name="nombre_heures" id="nombre_heures" required><br><br>
+
+                <hr>
+
+                <button type="submit" class="registerbtn">Ajouter</button>
+            </form>
+        </div>
+    </form>
+
+</div>
+<script>
+    function w3_open() {
+        document.getElementById("mySidebar").style.display = "block";
+    }
+
+    function w3_close() {
+        document.getElementById("mySidebar").style.display = "none";
+    }
+</script>
+</body>
+</html>

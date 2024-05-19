@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<title>My App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>
+    .non-paye {
+        background-color: rgba(210, 175, 175, 0.75);
+    }
+
+    .material-icons {
+        vertical-align: -14%
+    }
+
+    /* Code CSS pour maintenir la taille des lignes lors de la modification */
+    /*table.w3-table th,
+    table.w3-table td {
+        width: 150px; /* Définir la largeur de chaque cellule */
+    /*min-width: 150px;
+    max-width: 150px;
+}*/
+
+
+</style>
+<body>
+<div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px;left:0;" id="mySidebar">
+    <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+    <a href="{% url 'sidebar' %}" style="color: #354649;text-align: center;font-weight: bold"
+       class="w3-bar-item w3-button">Acceuil</a>
+    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Adhérentes</span>
+    <a href="{% url 'registration' %}" class="w3-bar-item w3-button">Ajouter</a>
+    <a href="{% url 'list' %}" class="w3-bar-item w3-button">Liste</a>
+    <a href="{% url 'recherche' %}" class="w3-bar-item w3-button">Rechercher</a>
+    <a href="{% url 'modif' %}" class="w3-bar-item w3-button">Modifier</a>
+    <a href="{% url 'suppStudent' %}" class="w3-bar-item w3-button">Supprimer</a>
+    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Professeurs</span>
+    <a href="{% url 'addProf' %}" class="w3-bar-item w3-button">Ajouter</a>
+    <a href="{% url 'listProf' %}" class="w3-bar-item w3-button">Liste</a>
+    <a href="{% url 'rechercheProf' %}" class="w3-bar-item w3-button">Rechercher</a>
+    <a href="{% url 'modifProf' %}" class="w3-bar-item w3-button">Modifier</a>
+    <a href="{% url 'suppProf' %}" class="w3-bar-item w3-button">Supprimer</a>
+</div>
+<div class="w3-main" style="margin-left:200px">
+    <div class="w3-teal">
+        <button class="w3-button  w3-xlarge w3-left w3-hide-large" style="background-color: #354649"
+                onclick="w3_open()">&#9776;
+        </button>
+        <div class="w3-container" style="background-color: #354649">
+            <h1 style="color: white">ⵀⵉⵢⴰ ⵡⴰ ⵀⵓⵡⴰ ⵙⵉⵢⴰⵏ</h1>
+        </div>
+    </div>
+    <div class="w3-container">
+        <h2 style="font-size: 35px; padding: 10px">Liste des adhérentes</h2>
+        <p>Veuillez choisir le mois:</p>
+        <select id="mois" name="mois">
+            <option value="" disabled selected id="currentMonth">--Sélectionnez le mois--</option>
+            <option value="1">Janvier</option>
+            <option value="2">Février</option>
+            <option value="3">Mars</option>
+            <option value="4">Avril</option>
+            <option value="5">Mai</option>
+            <option value="6">Juin</option>
+            <option value="7">Juillet</option>
+            <option value="8">Août</option>
+            <option value="9">Septembre</option>
+            <option value="10">Octobre</option>
+            <option value="11">Novembre</option>
+            <option value="12">Décembre</option>
+        </select><br><br>
+
+        <table class="w3-table w3-bordered">
+            {% csrf_token %}
+            <tr>
+                <th>Nom Complet</th>
+                <th>Numéro de téléphone</th>
+                <th>Date d'adhésion</th>
+                <th>Niveau</th>
+                <th>Nombre de séances</th>
+                <th>Reste à payer</th>
+            </tr>
+            {% for student in students reversed %}
+                {% if student.nonpaye > 0 %}
+                    <tr class="non-paye">
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.numTel }}</td>
+                        <td>{{ student.date }}</td>
+                        <td>{{ student.niveau_text }}</td>
+                        <td>{{ student.seance }}</td>
+                        <td>{{ student.nonpaye }}</td>
+                        <td>
+                            <form action="{% url 'modify_student' student.id %}" method="get">
+                                {% csrf_token %}
+                                <input type="hidden" name="student_id" value="{{ student.id }}">
+                                <button type="submit">Modifier</button>
+                            </form>
+                        </td>
+
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.numTel }}</td>
+                        <td>{{ student.date }}</td>
+                        <td>{{ student.niveau_text }}</td>
+                        <td>{{ student.seance }}</td>
+                        <td>{{ student.nonpaye }}</td>
+                        <td>
+                            <form action="{% url 'modify_student' student.id %}" method="get">
+                                {% csrf_token %}
+                                <input type="hidden" name="student_id" value="{{ student.id }}">
+                                <button type="submit">Modifier</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+
+    </div>
+</div>
+<script>
+    // Obtenir les éléments HTML pertinents
+    const selectMonth = document.getElementById('mois');
+    const tableRows = document.querySelectorAll('table.w3-table tr');
+
+    // Ajouter un gestionnaire d'événement de changement au sélecteur de mois
+    selectMonth.addEventListener('change', function () {
+        // Récupérer le mois sélectionné par l'utilisateur
+        const selectedMonth = parseInt(this.value); // Convertir en entier
+
+        // Parcourir toutes les lignes du tableau
+        tableRows.forEach(function (row) {
+            // Récupérer la date d'adhésion de chaque adhérente
+            const dateCell = row.querySelector('td:nth-child(3)');
+            if (dateCell) {
+                const date = new Date(dateCell.textContent);
+                const month = date.getMonth() + 1; // JavaScript compte les mois à partir de 0, donc ajouter 1
+                // Vérifier si la date d'adhésion correspond au mois sélectionné
+                if (selectedMonth === month) {
+                    row.style.display = ''; // Afficher la ligne si le mois correspond
+                } else {
+                    row.style.display = 'none'; // Masquer la ligne sinon
+                }
+            }
+        });
+    });
+</script>
+<script>
+    function editRow(button) {
+        const row = button.closest('tr');
+        const cells = row.querySelectorAll('td:not(:last-child)');
+        cells.forEach(function (cell) {
+            const text = cell.textContent;
+            cell.innerHTML = `<input type="text" value="${text}">`;
+        });
+        button.style.display = 'none';
+        row.querySelector('.save-button').style.display = '';
+
+        // Ajuster la hauteur de la ligne pour conserver ses dimensions d'origine
+        const rowHeight = row.offsetHeight;
+        row.style.height = rowHeight + 'px';
+    }
+
+
+    function saveRow(button) {
+        const row = button.closest('tr');
+        const inputs = row.querySelectorAll('input[type="text"]');
+        inputs.forEach(function (input) {
+            const value = input.value;
+            input.parentElement.textContent = value;
+        });
+        button.style.display = 'none';
+        row.querySelector('.modify-button').style.display = '';
+        // Envoyer les données modifiées au serveur (vous devrez implémenter cette fonctionnalité)
+    }
+
+
+</script>
+<script>
+function w3_open() {
+  document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+  document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+
+</body>
+</html>

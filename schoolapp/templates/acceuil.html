@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<title>My App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: center;
+    }
+
+    select {
+        padding: 5px;
+        margin: 5px;
+    }
+
+    button {
+        padding: 10px;
+        margin: 10px;
+    }
+</style>
+<script>
+    function addEntry() {
+        var day = document.getElementById('day').value;
+        var period = document.getElementById('period').value;
+        var subject = document.getElementById('subject').value;
+
+        if (day && period && subject) {
+            var cellId = day + '_' + period;
+            document.getElementById(cellId).innerText = subject;
+        } else {
+            alert('Veuillez sélectionner toutes les options.');
+        }
+    }
+
+    function submitTimetable() {
+        var timetable = [];
+        var days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+        var periods = ['1', '2', '3', '4', '5', '6', '7'];
+
+        days.forEach(function (day) {
+            periods.forEach(function (period) {
+                var cellId = day + '_' + period;
+                var subject = document.getElementById(cellId).innerText;
+                if (subject) {
+                    timetable.push({day: day, period: period, subject: subject});
+                }
+            });
+        });
+
+        document.getElementById('timetableData').value = JSON.stringify(timetable);
+        document.getElementById('timetableForm').submit();
+    }
+</script>
+<body>
+
+<div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px;left:0;" id="mySidebar">
+    <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+    <a href="{% url 'sidebar' %}" style="color: #354649 ;text-align: center;font-weight: bold"
+       class="w3-bar-item w3-button">Acceuil</a>
+    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Adhérentes</span>
+    <a href="{% url 'registration' %}" class="w3-bar-item w3-button">Ajouter</a>
+    <a href="{% url 'list' %}" class="w3-bar-item w3-button">Liste</a>
+    <a href="{% url 'recherche' %}" class="w3-bar-item w3-button">Rechercher</a>
+    <a href="{% url 'modif' %}" class="w3-bar-item w3-button">Modifier</a>
+    <a href="{% url 'suppStudent' %}" class="w3-bar-item w3-button">Supprimer</a>
+    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Professeurs</span>
+    <a href="{% url 'addProf' %}" class="w3-bar-item w3-button">Ajouter</a>
+    <a href="{% url 'listProf' %}" class="w3-bar-item w3-button">Liste</a>
+    <a href="{% url 'rechercheProf' %}" class="w3-bar-item w3-button">Rechercher</a>
+    <a href="{% url 'modifProf' %}" class="w3-bar-item w3-button">Modifier</a>
+    <a href="{% url 'suppProf' %}" class="w3-bar-item w3-button">Supprimer</a>
+</div>
+
+<div class="w3-main" style="margin-left:200px">
+    <div class="w3-teal">
+        <button class="w3-button  w3-xlarge w3-left w3-hide-large" style="background-color: #A3C6C4"
+                onclick="w3_open()">&#9776;
+        </button>
+        <div class="w3-container" style="background-color: #354649">
+            <h1 style="color: white">ⵀⵉⵢⴰ ⵡⴰ ⵀⵓⵡⴰ ⵙⵉⵢⴰⵏ</h1>
+        </div>
+    </div>
+
+    <div class="w3-container">
+        <h1>Modifier Emploi du Temps</h1>
+        <form id="timetableForm" method="POST" action="{% url 'timetable' %}">
+            {% csrf_token %}
+            <input type="hidden" id="timetableData" name="timetableData">
+            <table align="center">
+                <thead>
+                <tr>
+                    <th>Day/Period</th>
+                    <th>I<br>9:30-10:20</th>
+                    <th>II<br>10:20-11:10</th>
+                    <th>III<br>11:10-12:00</th>
+                    <th>12:00-12:40</th>
+                    <th>IV<br>12:40-1:30</th>
+                    <th>V<br>1:30-2:20</th>
+                    <th>VI<br>2:20-3:10</th>
+                    <th>VII<br>3:10-4:00</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Lundi</td>
+                    <td id="Lundi_1"></td>
+                    <td id="Lundi_2"></td>
+                    <td id="Lundi_3"></td>
+                    <td rowspan="6" style="background-color: #A3C6C4"><h2>L<br>U<br>N<br>C<br>H</h2></td>
+                    <td id="Lundi_4"></td>
+                    <td id="Lundi_5"></td>
+                    <td id="Lundi_6"></td>
+                    <td id="Lundi_7"></td>
+                </tr>
+                <tr>
+                    <td>Mardi</td>
+                    <td id="Mardi_1"></td>
+                    <td id="Mardi_2"></td>
+                    <td id="Mardi_3"></td>
+                    <td id="Mardi_4"></td>
+                    <td id="Mardi_5"></td>
+                    <td id="Mardi_6"></td>
+                    <td id="Mardi_7"></td>
+                </tr>
+                <tr>
+                    <td>Mercredi</td>
+                    <td id="Mercredi_1"></td>
+                    <td id="Mercredi_2"></td>
+                    <td id="Mercredi_3"></td>
+                    <td id="Mercredi_4"></td>
+                    <td id="Mercredi_5"></td>
+                    <td id="Mercredi_6"></td>
+                    <td id="Mercredi_7"></td>
+                </tr>
+                <tr>
+                    <td>Jeudi</td>
+                    <td id="Jeudi_1"></td>
+                    <td id="Jeudi_2"></td>
+                    <td id="Jeudi_3"></td>
+                    <td id="Jeudi_4"></td>
+                    <td id="Jeudi_5"></td>
+                    <td id="Jeudi_6"></td>
+                    <td id="Jeudi_7"></td>
+                </tr>
+                <tr>
+                    <td>Vendredi</td>
+                    <td id="Vendredi_1"></td>
+                    <td id="Vendredi_2"></td>
+                    <td id="Vendredi_3"></td>
+                    <td id="Vendredi_4"></td>
+                    <td id="Vendredi_5"></td>
+                    <td id="Vendredi_6"></td>
+                    <td id="Vendredi_7"></td>
+                </tr>
+                <tr>
+                    <td>Samedi</td>
+                    <td id="Samedi_1"></td>
+                    <td id="Samedi_2"></td>
+                    <td id="Samedi_3"></td>
+                    <td id="Samedi_4"></td>
+                    <td id="Samedi_5"></td>
+                    <td id="Samedi_6"></td>
+                    <td id="Samedi_7"></td>
+                </tr>
+                </tbody>
+            </table>
+            <div>
+                <label for="day">Jour:</label>
+                <select id="day">
+                    <option value="Lundi">Lundi</option>
+                    <option value="Mardi">Mardi</option>
+                    <option value="Mercredi">Mercredi</option>
+                    <option value="Jeudi">Jeudi</option>
+                    <option value="Vendredi">Vendredi</option>
+                    <option value="Samedi">Samedi</option>
+                </select>
+
+                <label for="period">Période:</label>
+                <select id="period">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+
+                <label for="subject">Matière:</label>
+                <select id="subject">
+                    <option value="Mathématiques">Mathématiques</option>
+                    <option value="Français">Français</option>
+                    <option value="Arabe">Arabe</option>
+                    <option value="Anglais">Anglais</option>
+                    <option value="Histoire Géographie">Histoire Géographie</option>
+                    <option value="Sciences">Sciences</option>
+                    <option value="Education Islamique">Education Islamique</option>
+                    <option value="Philosophie">Philosophie</option>
+                </select>
+
+                <button type="button" onclick="addEntry()">Ajouter</button>
+                <button type="submit" onclick="addEntry()">Enregistrer</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+    function w3_open() {
+        document.getElementById("mySidebar").style.display = "block";
+    }
+
+    function w3_close() {
+        document.getElementById("mySidebar").style.display = "none";
+    }
+</script>
+
+
+</body>
+</html>
