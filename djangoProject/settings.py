@@ -121,3 +121,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGIN_REDIRECT_URL = '/timetable/'  # Redirige vers la page d'accueil après connexion
+LOGOUT_REDIRECT_URL = '/login/'  # Redirige vers la page de connexion après déconnexion
+LOGIN_URL = '/login/'  # Redirige vers la page de connexion si non authentifié

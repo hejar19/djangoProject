@@ -24,52 +24,21 @@
         margin: 10px;
     }
 </style>
-<script>
-    function addEntry() {
-        var day = document.getElementById('day').value;
-        var period = document.getElementById('period').value;
-        var subject = document.getElementById('subject').value;
 
-        if (day && period && subject) {
-            var cellId = day + '_' + period;
-            document.getElementById(cellId).innerText = subject;
-        } else {
-            alert('Veuillez sélectionner toutes les options.');
-        }
-    }
-
-    function submitTimetable() {
-        var timetable = [];
-        var days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
-        var periods = ['1', '2', '3', '4', '5', '6', '7'];
-
-        days.forEach(function (day) {
-            periods.forEach(function (period) {
-                var cellId = day + '_' + period;
-                var subject = document.getElementById(cellId).innerText;
-                if (subject) {
-                    timetable.push({day: day, period: period, subject: subject});
-                }
-            });
-        });
-
-        document.getElementById('timetableData').value = JSON.stringify(timetable);
-        document.getElementById('timetableForm').submit();
-    }
-</script>
 <body>
 
 <div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px;left:0;" id="mySidebar">
     <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
     <a href="{% url 'sidebar' %}" style="color: #354649 ;text-align: center;font-weight: bold"
-       class="w3-bar-item w3-button">Acceuil</a>
-    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Adhérentes</span>
+       class="w3-bar-item w3-button">Acceuil
+    </a>
+    <span class="w3-bar-item" style="background-color: #E0E7E9;color: #6C7A89;text-align: center;font-weight: bold">Adhérentes</span>
     <a href="{% url 'registration' %}" class="w3-bar-item w3-button">Ajouter</a>
     <a href="{% url 'list' %}" class="w3-bar-item w3-button">Liste</a>
     <a href="{% url 'recherche' %}" class="w3-bar-item w3-button">Rechercher</a>
     <a href="{% url 'modif' %}" class="w3-bar-item w3-button">Modifier</a>
     <a href="{% url 'suppStudent' %}" class="w3-bar-item w3-button">Supprimer</a>
-    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Professeurs</span>
+    <span class="w3-bar-item" style="background-color: #E0E7E9;color: #6C7A89;text-align: center;font-weight: bold">Professeurs</span>
     <a href="{% url 'addProf' %}" class="w3-bar-item w3-button">Ajouter</a>
     <a href="{% url 'listProf' %}" class="w3-bar-item w3-button">Liste</a>
     <a href="{% url 'rechercheProf' %}" class="w3-bar-item w3-button">Rechercher</a>
@@ -82,15 +51,20 @@
         <button class="w3-button  w3-xlarge w3-left w3-hide-large" style="background-color: #A3C6C4"
                 onclick="w3_open()">&#9776;
         </button>
-        <div class="w3-container" style="background-color: #354649">
+        <div class="w3-container" style="background-color: #354649; position: relative; padding: 10px;">
             <h1 style="color: white">ⵀⵉⵢⴰ ⵡⴰ ⵀⵓⵡⴰ ⵙⵉⵢⴰⵏ</h1>
+            <a style="padding-right: 10px; position: absolute; top: 50%; right: 0; transform: translateY(-50%); color: #A3C6C4;"
+               href="{% url 'login' %}">Déconnexion</a>
+
         </div>
     </div>
 
     <div class="w3-container">
-        <h1>Modifier Emploi du Temps</h1>
+        <h1>Emploi du Temps
+        </h1>
         <form id="timetableForm" method="POST" action="{% url 'timetable' %}">
             {% csrf_token %}
+            <div id="error" style="display: none; color: red;"></div>  <!-- Error message div -->
             <input type="hidden" id="timetableData" name="timetableData">
             <table align="center">
                 <thead>
@@ -109,64 +83,64 @@
                 <tbody>
                 <tr>
                     <td>Lundi</td>
-                    <td id="Lundi_1"></td>
-                    <td id="Lundi_2"></td>
-                    <td id="Lundi_3"></td>
+                    <td id="Lundi_1">{{ timetable.Lundi.1 }}</td>
+                    <td id="Lundi_2">{{ timetable.Lundi.2 }}</td>
+                    <td id="Lundi_3">{{ timetable.Lundi.3 }}</td>
                     <td rowspan="6" style="background-color: #A3C6C4"><h2>L<br>U<br>N<br>C<br>H</h2></td>
-                    <td id="Lundi_4"></td>
-                    <td id="Lundi_5"></td>
-                    <td id="Lundi_6"></td>
-                    <td id="Lundi_7"></td>
+                    <td id="Lundi_4">{{ timetable.Lundi.4 }}</td>
+                    <td id="Lundi_5">{{ timetable.Lundi.5 }}</td>
+                    <td id="Lundi_6">{{ timetable.Lundi.6 }}</td>
+                    <td id="Lundi_7">{{ timetable.Lundi.7 }}</td>
                 </tr>
                 <tr>
                     <td>Mardi</td>
-                    <td id="Mardi_1"></td>
-                    <td id="Mardi_2"></td>
-                    <td id="Mardi_3"></td>
-                    <td id="Mardi_4"></td>
-                    <td id="Mardi_5"></td>
-                    <td id="Mardi_6"></td>
-                    <td id="Mardi_7"></td>
+                    <td id="Mardi_1">{{ timetable.Mardi.1 }}</td>
+                    <td id="Mardi_2">{{ timetable.Mardi.2 }}</td>
+                    <td id="Mardi_3">{{ timetable.Mardi.3 }}</td>
+                    <td id="Mardi_4">{{ timetable.Mardi.4 }}</td>
+                    <td id="Mardi_5">{{ timetable.Mardi.5 }}</td>
+                    <td id="Mardi_6">{{ timetable.Mardi.6 }}</td>
+                    <td id="Mardi_7">{{ timetable.Mardi.7 }}</td>
                 </tr>
                 <tr>
                     <td>Mercredi</td>
-                    <td id="Mercredi_1"></td>
-                    <td id="Mercredi_2"></td>
-                    <td id="Mercredi_3"></td>
-                    <td id="Mercredi_4"></td>
-                    <td id="Mercredi_5"></td>
-                    <td id="Mercredi_6"></td>
-                    <td id="Mercredi_7"></td>
+                    <td id="Mercredi_1">{{ timetable.Mercredi.1 }}</td>
+                    <td id="Mercredi_2">{{ timetable.Mercredi.2 }}</td>
+                    <td id="Mercredi_3">{{ timetable.Mercredi.3 }}</td>
+                    <td id="Mercredi_4">{{ timetable.Mercredi.4 }}</td>
+                    <td id="Mercredi_5">{{ timetable.Mercredi.5 }}</td>
+                    <td id="Mercredi_6">{{ timetable.Mercredi.6 }}</td>
+                    <td id="Mercredi_7">{{ timetable.Mercredi.7 }}</td>
                 </tr>
                 <tr>
                     <td>Jeudi</td>
-                    <td id="Jeudi_1"></td>
-                    <td id="Jeudi_2"></td>
-                    <td id="Jeudi_3"></td>
-                    <td id="Jeudi_4"></td>
-                    <td id="Jeudi_5"></td>
-                    <td id="Jeudi_6"></td>
-                    <td id="Jeudi_7"></td>
+                    <td id="Jeudi_1">{{ timetable.Jeudi.1 }}</td>
+                    <td id="Jeudi_2">{{ timetable.Jeudi.2 }}</td>
+                    <td id="Jeudi_3">{{ timetable.Jeudi.3 }}</td>
+                    <td id="Jeudi_4">{{ timetable.Jeudi.4 }}</td>
+                    <td id="Jeudi_5">{{ timetable.Jeudi.5 }}</td>
+                    <td id="Jeudi_6">{{ timetable.Jeudi.6 }}</td>
+                    <td id="Jeudi_7">{{ timetable.Jeudi.7 }}</td>
                 </tr>
                 <tr>
                     <td>Vendredi</td>
-                    <td id="Vendredi_1"></td>
-                    <td id="Vendredi_2"></td>
-                    <td id="Vendredi_3"></td>
-                    <td id="Vendredi_4"></td>
-                    <td id="Vendredi_5"></td>
-                    <td id="Vendredi_6"></td>
-                    <td id="Vendredi_7"></td>
+                    <td id="Vendredi_1">{{ timetable.Vendredi.1 }}</td>
+                    <td id="Vendredi_2">{{ timetable.Vendredi.2 }}</td>
+                    <td id="Vendredi_3">{{ timetable.Vendredi.3 }}</td>
+                    <td id="Vendredi_4">{{ timetable.Vendredi.4 }}</td>
+                    <td id="Vendredi_5">{{ timetable.Vendredi.5 }}</td>
+                    <td id="Vendredi_6">{{ timetable.Vendredi.6 }}</td>
+                    <td id="Vendredi_7">{{ timetable.Vendredi.7 }}</td>
                 </tr>
                 <tr>
                     <td>Samedi</td>
-                    <td id="Samedi_1"></td>
-                    <td id="Samedi_2"></td>
-                    <td id="Samedi_3"></td>
-                    <td id="Samedi_4"></td>
-                    <td id="Samedi_5"></td>
-                    <td id="Samedi_6"></td>
-                    <td id="Samedi_7"></td>
+                    <td id="Samedi_1">{{ timetable.Samedi.1 }}</td>
+                    <td id="Samedi_2">{{ timetable.Samedi.2 }}</td>
+                    <td id="Samedi_3">{{ timetable.Samedi.3 }}</td>
+                    <td id="Samedi_4">{{ timetable.Samedi.4 }}</td>
+                    <td id="Samedi_5">{{ timetable.Samedi.5 }}</td>
+                    <td id="Samedi_6">{{ timetable.Samedi.6 }}</td>
+                    <td id="Samedi_7">{{ timetable.Samedi.7 }}</td>
                 </tr>
                 </tbody>
             </table>
@@ -222,6 +196,67 @@
     }
 </script>
 
+<script>
+    function addEntry() {
+        var day = document.getElementById('day').value;
+        var period = document.getElementById('period').value;
+        var subject = document.getElementById('subject').value;
+
+        if (day && period && subject) {
+            var cellId = day + '_' + period;
+            document.getElementById(cellId).innerText = subject;
+        } else {
+            alert('Veuillez sélectionner toutes les options.');
+        }
+    }
+
+    function submitTimetable() {
+        var timetable = [];
+        var days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+        var periods = ['1', '2', '3', '4', '5', '6', '7'];
+
+        days.forEach(function (day) {
+            periods.forEach(function (period) {
+                var cellId = day + '_' + period;
+                var subject = document.getElementById(cellId).innerText;
+                if (subject) {
+                    timetable.push({day: day, period: period, subject: subject});
+                }
+            });
+        });
+
+        var timetableData = JSON.stringify(timetable);
+        console.log(timetableData);
+
+        // Envoi des données via fetch
+        fetch("{% url 'timetable' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: timetableData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Enregistrement Réussi ! Lah issakhr :)');
+                } else {
+                    alert('Error :( ! ' + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Une erreur s\'est produite :(');
+            });
+    }
+
+    // Arrêter la soumission du formulaire et envoyer les données via fetch
+    document.getElementById('timetableForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        submitTimetable();
+    });
+</script>
 
 </body>
 </html>

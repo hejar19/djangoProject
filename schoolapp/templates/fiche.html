@@ -5,33 +5,33 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <style>
-.registerbtn {
-            background-color: #A3C6C4;
-            color: white;
-            padding: 16px 20px;
-            margin: 8px 0;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            opacity: 0.9;
-        }
+    .registerbtn {
+        background-color: #A3C6C4;
+        color: white;
+        padding: 16px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        opacity: 0.9;
+    }
 
-        .registerbtn:hover {
-            opacity: 1;
-        }
+    .registerbtn:hover {
+        opacity: 1;
+    }
 </style>
 <body>
 <div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px;left:0;" id="mySidebar">
     <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
     <a href="{% url 'sidebar' %}" style="color: #354649;text-align: center;font-weight: bold"
        class="w3-bar-item w3-button">Acceuil</a>
-    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Adhérentes</span>
+    <span class="w3-bar-item" style="background-color: #E0E7E9;color: #6C7A89;text-align: center;font-weight: bold">Adhérentes</span>
     <a href="{% url 'registration' %}" class="w3-bar-item w3-button">Ajouter</a>
     <a href="{% url 'list' %}" class="w3-bar-item w3-button">Liste</a>
     <a href="{% url 'recherche' %}" class="w3-bar-item w3-button">Rechercher</a>
     <a href="{% url 'modif' %}" class="w3-bar-item w3-button">Modifier</a>
     <a href="{% url 'suppStudent' %}" class="w3-bar-item w3-button">Supprimer</a>
-    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Professeurs</span>
+    <span class="w3-bar-item" style="background-color: #E0E7E9;color: #6C7A89;text-align: center;font-weight: bold">Professeurs</span>
     <a href="{% url 'addProf' %}" class="w3-bar-item w3-button">Ajouter</a>
     <a href="{% url 'listProf' %}" class="w3-bar-item w3-button">Liste</a>
     <a href="{% url 'rechercheProf' %}" class="w3-bar-item w3-button">Rechercher</a>
@@ -43,43 +43,46 @@
         <button class="w3-button  w3-xlarge w3-left w3-hide-large" style="background-color: #354649"
                 onclick="w3_open()">&#9776;
         </button>
-        <div class="w3-container" style="background-color: #354649">
+        <div class="w3-container" style="background-color: #354649; position: relative; padding: 10px;">
             <h1 style="color: white">ⵀⵉⵢⴰ ⵡⴰ ⵀⵓⵡⴰ ⵙⵉⵢⴰⵏ</h1>
+            <a style="padding-right: 10px; position: absolute; top: 50%; right: 0; transform: translateY(-50%); color: #A3C6C4;"
+               href="{% url 'login' %}">Déconnexion</a>
         </div>
     </div>
     <div class="w3-container">
         <form method="post" action="{% url 'modify_student' student.id %}">
-        {% csrf_token %}
-        <ul style="margin: 10px" class="w3-ul w3-border">
-            <h2 style="padding-left: 20px">Fiche de l'adhérente <span
-                    style="background-color: #A3C6C4">{{ student.name }}</span> :</h2>
-            <hr>
-            <li><label for="name">Nom Complet:</label> <input type="text" id="name" name="name"
-                                                              value="{{ student.name }}"></li>
-            <li><label for="numTel">Numéro de téléphone:</label> <input type="text" id="numTel" name="numTel"
-                                                                        value="{{ student.numTel }}"></li>
-            <li><label for="date">Date d'adhésion:</label> <input type="date" id="date" name="date"
-                                                                  value="{{ student.date }}"></li>
-            <li><label for="niveau">Niveau:</label> <input type="text" id="niveau" name="niveau"
-                                                           value="{{ student.niveau_text }}"></li>
-            <li><label for="seance">Nombre de séances:</label> <input type="text" id="seance" name="seance"
-                                                                      value="{{ student.seance }}"></li>
-            <li><label for="montant">Montant total:</label> <input type="text" id="montant" name="montant"
-                                                                   value="{{ student.montant }}"></li>
-            <li><label for="paye">Montant payé:</label> <input type="text" id="paye" name="paye"
-                                                               value="{{ student.paye }}"></li>
-        </ul>
-        <button type="submit" class="registerbtn">Modifier</button>
+            {% csrf_token %}
+            <ul style="margin: 10px" class="w3-ul w3-border">
+                <h2 style="padding-left: 20px">Fiche de l'adhérente <span
+                        style="background-color: #A3C6C4">{{ student.name }}</span> :</h2>
+                <hr>
+                <li><label for="name">Nom Complet:</label> <input type="text" id="name" name="name"
+                                                                  value="{{ student.name }}"></li>
+                <li><label for="numTel">Numéro de téléphone:</label> <input type="text" id="numTel" name="numTel"
+                                                                            value="{{ student.numTel }}"></li>
+                <li><label for="date">Date d'adhésion:</label> <input type="date" id="date" name="date"
+                                                                      value="{{ student.date|date:'Y-m-d' }}"></li>
+                <li><label for="niveau">Niveau:</label> <input type="text" id="niveau" name="niveau"
+                                                               value="{{ student.niveau_text }}"></li>
+                <li><label for="seance">Nombre de séances:</label> <input type="text" id="seance" name="seance"
+                                                                          value="{{ student.seance }}"></li>
+                <li><label for="montant">Montant total:</label> <input type="text" id="montant" name="montant"
+                                                                       value="{{ student.montant }}"></li>
+                <li><label for="paye">Montant payé:</label> <input type="text" id="paye" name="paye"
+                                                                   value="{{ student.paye }}"></li>
+            </ul>
+            <button type="submit" class="registerbtn">Modifier</button>
         </form>
     </div>
 </div>
 <script>
-function w3_open() {
-  document.getElementById("mySidebar").style.display = "block";
-}
-function w3_close() {
-  document.getElementById("mySidebar").style.display = "none";
-}
+    function w3_open() {
+        document.getElementById("mySidebar").style.display = "block";
+    }
+
+    function w3_close() {
+        document.getElementById("mySidebar").style.display = "none";
+    }
 </script>
 
 </body>

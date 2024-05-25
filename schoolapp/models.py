@@ -8,7 +8,6 @@ class Students(models.Model):
     name = models.CharField(max_length=200,null=False,blank=False)
     numTel=models.CharField(max_length=10,null=False,blank=False)
     date = models.DateField(null=False,blank=False)
-    #niveau = models.CharField(max_length=50,null=False,blank=False)
     seance = models.IntegerField(null=False,blank=False)
     montant = models.IntegerField(null=False,blank=False)
     paye = models.IntegerField(null=False,blank=False)
@@ -36,7 +35,6 @@ class Students(models.Model):
 class Professeur(models.Model):
     nom = models.CharField(max_length=200, null=False, blank=False)
     numTel = models.CharField(max_length=10, null=False, blank=False)
-    #matiere = models.CharField(max_length=100, null=False, blank=False)
     nombre_heures = models.IntegerField(null=False, blank=False)
     MATIERE_CHOICES = [
         ('mathematiques', 'Mathématiques'),

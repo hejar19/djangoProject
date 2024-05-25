@@ -13,13 +13,13 @@
     <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
     <a href="{% url 'sidebar' %}" style="color: #354649;text-align: center;font-weight: bold"
        class="w3-bar-item w3-button">Acceuil</a>
-    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Adhérentes</span>
+    <span class="w3-bar-item" style="background-color: #E0E7E9;color: #6C7A89;text-align: center;font-weight: bold">Adhérentes</span>
     <a href="{% url 'registration' %}" class="w3-bar-item w3-button">Ajouter</a>
     <a href="{% url 'list' %}" class="w3-bar-item w3-button">Liste</a>
     <a href="{% url 'recherche' %}" class="w3-bar-item w3-button">Rechercher</a>
     <a href="{% url 'modif' %}" class="w3-bar-item w3-button">Modifier</a>
     <a href="{% url 'suppStudent' %}" class="w3-bar-item w3-button">Supprimer</a>
-    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Professeurs</span>
+    <span class="w3-bar-item" style="background-color: #E0E7E9;color: #6C7A89;text-align: center;font-weight: bold">Professeurs</span>
     <a href="{% url 'addProf' %}" class="w3-bar-item w3-button">Ajouter</a>
     <a href="{% url 'listProf' %}" class="w3-bar-item w3-button">Liste</a>
     <a href="{% url 'rechercheProf' %}" class="w3-bar-item w3-button">Rechercher</a>
@@ -31,13 +31,17 @@
         <button class="w3-button  w3-xlarge w3-left w3-hide-large" style="background-color: #A3C6C4"
                 onclick="w3_open()">&#9776;
         </button>
-        <div class="w3-container" style="background-color: #354649">
+        <div class="w3-container" style="background-color: #354649; position: relative; padding: 10px;">
             <h1 style="color: white">ⵀⵉⵢⴰ ⵡⴰ ⵀⵓⵡⴰ ⵙⵉⵢⴰⵏ</h1>
+            <a style="padding-right: 10px; position: absolute; top: 50%; right: 0; transform: translateY(-50%); color: #A3C6C4;"
+               href="{% url 'login' %}">Déconnexion</a>
         </div>
+
+
     </div>
     <div class="w3-container">
         <h2 style="font-size: 35px; padding: 10px">Liste des adhérentes</h2>
-        <div style="float: right;">
+        <div style="float: right; margin-top: 10px;">
             <label for="tri">Trier par :</label>
             <select id="tri" name="tri">
                 <option value="nom">Nom</option>
@@ -45,40 +49,45 @@
             </select>
             <button onclick="triEtudiants()">Trier</button>
         </div>
-    <div>
-        <p>Veuillez choisir le mois:</p>
-        <select id="mois" name="mois">
-            <option value="" disabled selected id="currentMonth">--Sélectionnez le mois--</option>
-            <option value="1">Janvier</option>
-            <option value="2">Février</option>
-            <option value="3">Mars</option>
-            <option value="4">Avril</option>
-            <option value="5">Mai</option>
-            <option value="6">Juin</option>
-            <option value="7">Juillet</option>
-            <option value="8">Août</option>
-            <option value="9">Septembre</option>
-            <option value="10">Octobre</option>
-            <option value="11">Novembre</option>
-            <option value="12">Décembre</option>
-        </select>
-        <label for="niveau">Choisir le niveau :</label>
-        <select id="niveau" name="niveau">
-            <option value="" disabled selected>--Sélectionnez le niveau--</option>
-            <option value="CP">CP</option>
-            <option value="CE1">CE1</option>
-            <option value="CE2">CE2</option>
-            <option value="CM1">CM1</option>
-            <option value="CM2">CM2</option>
-            <option value="6ème">6ème</option>
-            <option value="1 AC">1 AC</option>
-            <option value="2 AC">2 AC</option>
-            <option value="3 AC">3 AC</option>
-            <option value="Tronc Commun">Tronc Commun</option>
-            <option value="Première année BAC">Première année BAC</option>
-            <option value="Deuxième année BAC">Deuxième année BAC</option>
-        </select>
-    </div><br><br>
+
+        <div>
+            <div style="text-align: center;">
+                <p style="display: inline-block;">Choisir le mois:</p>
+                <select id="mois" name="mois" style="display: inline-block;">
+                    <option value="" disabled selected id="currentMonth">--Sélectionnez le mois--</option>
+                    <option value="1">Janvier</option>
+                    <option value="2">Février</option>
+                    <option value="3">Mars</option>
+                    <option value="4">Avril</option>
+                    <option value="5">Mai</option>
+                    <option value="6">Juin</option>
+                    <option value="7">Juillet</option>
+                    <option value="8">Août</option>
+                    <option value="9">Septembre</option>
+                    <option value="10">Octobre</option>
+                    <option value="11">Novembre</option>
+                    <option value="12">Décembre</option>
+                </select>
+                <label for="niveau" style="display: inline-block;">Choisir le niveau :</label>
+                <select id="niveau" name="niveau" style="display: inline-block;">
+                    <option value="" disabled selected>--Sélectionnez le niveau--</option>
+                    <option value="CP">CP</option>
+                    <option value="CE1">CE1</option>
+                    <option value="CE2">CE2</option>
+                    <option value="CM1">CM1</option>
+                    <option value="CM2">CM2</option>
+                    <option value="6ème">6ème</option>
+                    <option value="1 AC">1 AC</option>
+                    <option value="2 AC">2 AC</option>
+                    <option value="3 AC">3 AC</option>
+                    <option value="Tronc Commun">Tronc Commun</option>
+                    <option value="Première année BAC">Première année BAC</option>
+                    <option value="Deuxième année BAC">Deuxième année BAC</option>
+                </select>
+            </div>
+
+        </div>
+        <br><br>
         <table class="w3-table w3-bordered">
             <tr>
                 <th>Nom Complet</th>
@@ -175,7 +184,7 @@
         var rows = table.querySelectorAll('tr');
         var tri = Array.from(rows).slice(1); // Exclure la première ligne d'en-tête
 
-        tri.sort(function(a, b) {
+        tri.sort(function (a, b) {
             var aData = a.querySelector('td:nth-child(' + (critere === 'date' ? '3' : '1') + ')').innerText;
             var bData = b.querySelector('td:nth-child(' + (critere === 'date' ? '3' : '1') + ')').innerText;
 

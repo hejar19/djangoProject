@@ -2,22 +2,33 @@ import json
 from datetime import datetime
 from itertools import zip_longest
 
-from babel.dates import format_date
+from babel.dates import format_date, parse_date
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
 from django.core.mail.backends import console
 from django.db.models import Q
 from django.db.models.functions import Lower
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
-from schoolapp.forms import TimetableForm
+from schoolapp.forms import TimetableForm, CustomAuthenticationForm
 from schoolapp.models import Students, Professeur, Timetable
 
-
-# Create your views here.
-def sidebar(request):
+@login_required
+def home(request):
     return render(request, 'acceuil.html')
+# Create your views here.
+class CustomLoginView(LoginView):
+    authentication_form = CustomAuthenticationForm
+    template_name = 'login.html'
+def sidebar(request):
+    # redirect to timetable
+    return redirect('timetable')
+
+
 def confirmation_student(request):
     return render(request, 'confirmationAjoutStudent.html')
+
 
 def addStudent(request):
     if request.method == 'POST':
@@ -25,7 +36,7 @@ def addStudent(request):
         # Récupérer les données du formulaire
         name = request.POST.get('name')
         numTel = request.POST.get('numTel')
-        #date = request.POST.get('date')
+        # date = request.POST.get('date')
         date_str = request.POST.get('date')  # Déclaration de la variable date_str
         date = datetime.strptime(date_str, '%Y-%m-%d').date()
         niveau = request.POST.get('niveau')
@@ -39,12 +50,12 @@ def addStudent(request):
         new_student.save()
         # Enregistrer les matières sélectionnées avec le nouvel étudiant
 
-
         # Rediriger vers une autre page ou rendre une page de confirmation
         return render(request, 'confirmationAjoutStudent.html')
 
     # Si la méthode de la requête n'est pas POST, afficher simplement le formulaire
     return render(request, 'addStudent.html')
+
 
 def list(request):
     students = Students.objects.all()
@@ -53,21 +64,28 @@ def list(request):
         # Ajoutez ceci pour obtenir le texte du niveau pour chaque étudiant
         student.niveau_text = dict(Students.NIVEAU_CHOICES).get(student.niveau)
     return render(request, 'listStudents.html', {'students': students})
+
+
 def modifStudent(request):
     students = Students.objects.all()
     for student in students:
         student.nonpaye = student.montant - student.paye
         student.niveau_text = dict(Students.NIVEAU_CHOICES).get(student.niveau)
     return render(request, 'modifStudent.html', {'students': students})
+
+
 def modify_student(request, student_id):
     student = Students.objects.get(id=student_id)
     if request.method == 'POST':
         print(request.POST)  # Ajout pour vérifier les données du formulaire
         date_str = request.POST.get('date')  # Déclaration de la variable date_str
-        date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        if date_str:
+            date = datetime.strptime(date_str, '%Y-%m-%d').date()
+            student.date = date
+        else:
+            student.date = None
         student.name = request.POST['name']
         student.numTel = request.POST['numTel']
-        student.date = date
         student.niveau = request.POST['niveau']
         student.seance = request.POST['seance']
         student.montant = request.POST['montant']
@@ -76,8 +94,11 @@ def modify_student(request, student_id):
         return redirect('confirmModifStudent')
     student.niveau_text = dict(Students.NIVEAU_CHOICES).get(student.niveau)
     return render(request, 'fiche.html', {'student': student})
+
+
 def confirmationModifStudent(request):
     return render(request, 'confirmModifStudent.html')
+
 
 def suppStudent(request):
     if request.method == 'POST':
@@ -91,6 +112,8 @@ def suppStudent(request):
         student.nonpaye = student.montant - student.paye
         student.niveau_text = dict(Students.NIVEAU_CHOICES).get(student.niveau)
     return render(request, 'suppStudent.html', {'students': students})
+
+
 def rechStudent(request):
     if request.method == 'POST':
         nom_recherche = request.POST.get('nameRech')
@@ -113,28 +136,28 @@ def listProf(request):
     professeurs = Professeur.objects.all()
     return render(request, 'listProf.html', {'professeurs': professeurs})
 
+
 def confirmation_professeur(request):
     return render(request, 'confirmationAjoutProf.html')
 
+
 def addProf(request):
-        if request.method == 'POST':
-            # Récupérer les données du formulaire
-            nom = request.POST.get('nom')
-            numTel = request.POST.get('numTel')
-            matiere = request.POST.get('matiere')
-            nombre_heures = request.POST.get('nombre_heures')
+    if request.method == 'POST':
+        # Récupérer les données du formulaire
+        nom = request.POST.get('nom')
+        numTel = request.POST.get('numTel')
+        matiere = request.POST.get('matiere')
+        nombre_heures = request.POST.get('nombre_heures')
 
-            # Créer une nouvelle instance de la classe Professeur et enregistrer les données
-            nouveau_professeur = Professeur(nom=nom, numTel=numTel, matiere=matiere, nombre_heures=nombre_heures)
-            nouveau_professeur.save()
+        # Créer une nouvelle instance de la classe Professeur et enregistrer les données
+        nouveau_professeur = Professeur(nom=nom, numTel=numTel, matiere=matiere, nombre_heures=nombre_heures)
+        nouveau_professeur.save()
 
-            # Rediriger vers une autre page ou rendre une page de confirmation
-            return redirect('confirmation_professeur')
+        # Rediriger vers une autre page ou rendre une page de confirmation
+        return redirect('confirmation_professeur')
 
-        # Si la méthode de la requête n'est pas POST, afficher simplement le formulaire
-        return render(request, 'addProf.html')
-
-
+    # Si la méthode de la requête n'est pas POST, afficher simplement le formulaire
+    return render(request, 'addProf.html')
 
 
 def suppProf(request):
@@ -142,15 +165,17 @@ def suppProf(request):
         professeur_id = request.POST.get('professeur_id')  # Obtenir l'ID du professeur à supprimer
         professeur = Professeur.objects.get(id=professeur_id)
         professeur.delete()  # Supprimer le professeur de la base de données
-        return redirect('listProf')  # Rediriger l'utilisateur vers la page de liste des professeurs après la suppression
+        return redirect(
+            'listProf')  # Rediriger l'utilisateur vers la page de liste des professeurs après la suppression
 
     professeurs = Professeur.objects.all()
     return render(request, 'suppProf.html', {'professeurs': professeurs})
 
+
 def modifyProf(request, professeur_id):
     professeur = Professeur.objects.get(id=professeur_id)
     if request.method == 'POST':
-        #print(request.POST)  # Ajout pour vérifier les données du formulaire
+        # print(request.POST)  # Ajout pour vérifier les données du formulaire
         professeur.nom = request.POST['nom']
         professeur.numTel = request.POST['numTel']
         professeur.matiere = request.POST['matiere']
@@ -160,12 +185,16 @@ def modifyProf(request, professeur_id):
         return redirect('confirmModifProf')
     professeur.matiere_text = dict(Professeur.MATIERE_CHOICES).get(professeur.matiere)
     return render(request, 'ficheProf.html', {'professeur': professeur})
+
+
 def modifProf(request):
     professeurs = Professeur.objects.all()
     return render(request, 'modifProf.html', {'professeurs': professeurs})
 
+
 def confirmationModifProf(request):
     return render(request, 'confirmModifProf.html')
+
 
 def rechercheProf(request):
     if request.method == 'POST':
@@ -181,7 +210,6 @@ def rechercheProf(request):
 
 
 def timetable(request):
-    print("ok")
     timetable_entries = Timetable.objects.all()
     days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi']
     periods = [str(i) for i in range(1, 8)]
@@ -191,27 +219,17 @@ def timetable(request):
         timetable[entry.day][entry.period] = entry.subject
 
     if request.method == 'POST':
-        form = TimetableForm(request.POST)
-        if form.is_valid():
-            day = form.cleaned_data['day']
-            period = form.cleaned_data['period']
-            subject = form.cleaned_data['subject']
-            print("Day:", day)
-            print("Period:", period)
-            print("Subject:", subject)
+        try:
+            timetable_data = json.loads(request.body)
+            for entry in timetable_data:
+                day = entry['day']
+                period = entry['period']
+                subject = entry['subject']
+                Timetable.objects.update_or_create(day=day, period=period, defaults={'subject': subject})
+            return JsonResponse({'status': 'success'})
+        except json.JSONDecodeError as e:
+            return JsonResponse({'status': 'error', 'message': 'Donnée Timetable non valide :('}, status=400)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
-            # Met à jour ou crée une nouvelle entrée
-            #timetable_entry, created = Timetable.objects.update_or_create(day=day, period=period, defaults={'subject': subject})
-            #print("Entry created:", created)
-            # Met à jour ou crée une nouvelle entrée
-            Timetable.objects.update_or_create(day=day, period=period, defaults={'subject': subject})
-            return redirect('timetable')
-    else:
-        print("impossible")
-        form = TimetableForm()
-
-    context = {
-        'timetable': timetable,
-        'form': form,
-    }
-    return render(request, 'acceuil.html', context)
+    return render(request, 'acceuil.html',  {'timetable': timetable})

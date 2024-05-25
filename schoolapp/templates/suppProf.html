@@ -20,13 +20,13 @@
     <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
     <a href="{% url 'sidebar' %}" style="color: #354649;text-align: center;font-weight: bold"
        class="w3-bar-item w3-button">Acceuil</a>
-    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Adhérentes</span>
+    <span class="w3-bar-item" style="background-color: #E0E7E9;color: #6C7A89;text-align: center;font-weight: bold">Adhérentes</span>
     <a href="{% url 'registration' %}" class="w3-bar-item w3-button">Ajouter</a>
     <a href="{% url 'list' %}" class="w3-bar-item w3-button">Liste</a>
     <a href="{% url 'recherche' %}" class="w3-bar-item w3-button">Rechercher</a>
     <a href="{% url 'modif' %}" class="w3-bar-item w3-button">Modifier</a>
     <a href="{% url 'suppStudent' %}" class="w3-bar-item w3-button">Supprimer</a>
-    <span class="w3-bar-item" style="color: #6C7A89;text-align: center;font-weight: bold">Professeurs</span>
+    <span class="w3-bar-item" style="background-color: #E0E7E9;color: #6C7A89;text-align: center;font-weight: bold">Professeurs</span>
     <a href="{% url 'addProf' %}" class="w3-bar-item w3-button">Ajouter</a>
     <a href="{% url 'listProf' %}" class="w3-bar-item w3-button">Liste</a>
     <a href="{% url 'rechercheProf' %}" class="w3-bar-item w3-button">Rechercher</a>
@@ -38,8 +38,10 @@
         <button class="w3-button  w3-xlarge w3-left w3-hide-large" style="background-color: #354649"
                 onclick="w3_open()">&#9776;
         </button>
-        <div class="w3-container" style="background-color: #354649">
+        <div class="w3-container" style="background-color: #354649; position: relative; padding: 10px;">
             <h1 style="color: white">ⵀⵉⵢⴰ ⵡⴰ ⵀⵓⵡⴰ ⵙⵉⵢⴰⵏ</h1>
+            <a style="padding-right: 10px; position: absolute; top: 50%; right: 0; transform: translateY(-50%); color: #A3C6C4;"
+               href="{% url 'login' %}">Déconnexion</a>
         </div>
     </div>
     <div class="w3-container">
@@ -60,11 +62,12 @@
                     <td>{{ professeur.nombre_heures }}</td>
                     <td>
                         <form id="deleteForm{{ professeur.id }}" action="{% url 'suppProf' %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="professeur_id" value="{{ professeur.id }}">
-                        <button type="button" onclick="confirmDelete('{{ professeur.id }}')"><i class="material-icons delete-icon"
-                                                         data-student-id="{{ professeur.id }}">delete</i></button>
-                    </form>
+                            {% csrf_token %}
+                            <input type="hidden" name="professeur_id" value="{{ professeur.id }}">
+                            <button type="button" onclick="confirmDelete('{{ professeur.id }}')"><i
+                                    class="material-icons delete-icon"
+                                    data-student-id="{{ professeur.id }}">delete</i></button>
+                        </form>
                     </td>
                 </tr>
             {% endfor %}
