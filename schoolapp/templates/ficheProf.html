@@ -59,12 +59,30 @@
                 <li><label for="nom">Nom Complet:</label> <input type="text" id="nom" name="nom"
                                                                  value="{{ professeur.nom }}"></li>
                 <li><label for="matiere">Matière:</label>
-                    <select id="matiere" name="matiere">
-                        {% for choix_matiere in Professeur.MATIERE_CHOICES %}
-                            <option value="{{ choix_matiere.0 }}"
-                                    {% if choix_matiere.0 == professeur.matiere %}selected{% endif %}>{{ choix_matiere.1 }}</option>
-                        {% endfor %}
-                    </select></li>
+                    <select id="matiere" name="matiere" style="width: 100%;">
+                        <option value="" disabled {% if not professeur.matiere %}selected{% endif %}>Choisissez une
+                            matière
+                        </option>
+                        <option value="mathematiques" {% if professeur.matiere == "mathematiques" %}selected{% endif %}>
+                            Mathématiques
+                        </option>
+                        <option value="francais" {% if professeur.matiere == "francais" %}selected{% endif %}>Français
+                        </option>
+                        <option value="arabe" {% if professeur.matiere == "arabe" %}selected{% endif %}>Arabe</option>
+                        <option value="anglais" {% if professeur.matiere == "anglais" %}selected{% endif %}>Anglais
+                        </option>
+                        <option value="histoire_geo" {% if professeur.matiere == "histoire_geo" %}selected{% endif %}>
+                            Histoire Géographie
+                        </option>
+                        <option value="sciences" {% if professeur.matiere == "sciences" %}selected{% endif %}>Sciences
+                        </option>
+                        <option value="ei" {% if professeur.matiere == "ei" %}selected{% endif %}>Education Islamique
+                        </option>
+                        <option value="philo" {% if professeur.matiere == "philo" %}selected{% endif %}>Philosophie
+                        </option>
+                    </select>
+                </li>
+
                 <li><label for="numTel">Numéro de téléphone:</label> <input type="text" id="numTel" name="numTel"
                                                                             value="{{ professeur.numTel }}"></li>
                 <li><label for="nombre_heures">Nombre d'heures:</label> <input type="text" id="nombre_heures"

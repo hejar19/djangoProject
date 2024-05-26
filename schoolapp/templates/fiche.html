@@ -62,8 +62,30 @@
                                                                             value="{{ student.numTel }}"></li>
                 <li><label for="date">Date d'adhésion:</label> <input type="date" id="date" name="date"
                                                                       value="{{ student.date|date:'Y-m-d' }}"></li>
-                <li><label for="niveau">Niveau:</label> <input type="text" id="niveau" name="niveau"
-                                                               value="{{ student.niveau_text }}"></li>
+                <li><label for="niveau">Niveau:</label>
+    <select id="niveau" name="niveau">
+        <option value="" disabled {% if not student.niveau %}selected{% endif %}>Choisissez un niveau</option>
+        <optgroup label="Primaire">
+            <option value="CP" {% if student.niveau == "CP" %}selected{% endif %}>CP</option>
+            <option value="CE1" {% if student.niveau == "CE1" %}selected{% endif %}>CE1</option>
+            <option value="CE2" {% if student.niveau == "CE2" %}selected{% endif %}>CE2</option>
+            <option value="CM1" {% if student.niveau == "CM1" %}selected{% endif %}>CM1</option>
+            <option value="CM2" {% if student.niveau == "CM2" %}selected{% endif %}>CM2</option>
+            <option value="6eme" {% if student.niveau == "6eme" %}selected{% endif %}>6ème</option>
+        </optgroup>
+        <optgroup label="Collège">
+            <option value="1AC" {% if student.niveau == "1AC" %}selected{% endif %}>1AC</option>
+            <option value="2AC" {% if student.niveau == "2AC" %}selected{% endif %}>2AC</option>
+            <option value="3AC" {% if student.niveau == "3AC" %}selected{% endif %}>3AC</option>
+        </optgroup>
+        <optgroup label="Lycée">
+            <option value="tronc-commun" {% if student.niveau == "tronc-commun" %}selected{% endif %}>Tronc Commun</option>
+            <option value="premiere" {% if student.niveau == "premiere" %}selected{% endif %}>Première année BAC</option>
+            <option value="deuxieme" {% if student.niveau == "deuxieme" %}selected{% endif %}>Deuxième année BAC</option>
+        </optgroup>
+    </select>
+</li>
+
                 <li><label for="seance">Nombre de séances:</label> <input type="text" id="seance" name="seance"
                                                                           value="{{ student.seance }}"></li>
                 <li><label for="montant">Montant total:</label> <input type="text" id="montant" name="montant"
